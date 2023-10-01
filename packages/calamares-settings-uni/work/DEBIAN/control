@@ -1,0 +1,11 @@
+Package: calamares-settings-uni
+Version: 1.0
+Architecture: all
+Maintainer: Yamato Tanikawa <tanick_developer@outlook.jp>
+Depends: calamares, cryptsetup, keyutils, qml-module-qtquick-window2, qml-module-qtquick2, dconf-gsettings-backend | gsettings-backend
+Conflicts: calamares-settings-debian
+Provides: calamares-settings
+Section: utils
+Priority: optional
+Description: Calamares settings for uni-os
+ Created with reference to https://salsa.debian.org/live-team/calamares-settings-debian-packaging

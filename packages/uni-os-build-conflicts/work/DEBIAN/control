@@ -1,0 +1,8 @@
+Package: uni-os-build-conflicts
+Version: 1.0
+Architecture: all
+Maintainer: Yamato Tanikawa <tanick_developer@outlook.jp>
+Conflicts: debian-referance-common, desktop-base, gnome-control-center, gnome-firmware, mlterm, mlterm-tiny, software-properties-common, yelp
+Section: unknown
+Priority: optional
+Description: DO NOT INSTALL ON A NORMAL SYSTEM!

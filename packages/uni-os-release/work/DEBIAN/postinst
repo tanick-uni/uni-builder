@@ -1,0 +1,4 @@
+#!/bin/bash
+sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="uni-os 1.0 (NP)"/' /etc/os-release
+sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="uni-os 1.0 (NP)"/' /usr/lib/os-release
+#update-grub

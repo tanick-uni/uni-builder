@@ -1,0 +1,7 @@
+Package: uni-os-release
+Version: 1.0~builder
+Architecture: all
+Maintainer: Yamato Tanikawa <tanick_developer@outlook.jp>
+Section: unknown
+Priority: optional
+Description: Configurate uni-os release version.
