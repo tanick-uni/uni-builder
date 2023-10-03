@@ -1,8 +1,8 @@
-/etc/calamares/branding/uni-os/branding.desc
-/etc/calamares/branding/uni-os/uni-link.png
-/etc/calamares/branding/uni-os/show.qml
-/etc/calamares/branding/uni-os/slide1.png
-/etc/calamares/branding/uni-os/welcome.png
+/etc/calamares/branding/debian/branding.desc
+/etc/calamares/branding/debian/uni-link.png
+/etc/calamares/branding/debian/show.qml
+/etc/calamares/branding/debian/slide1.png
+/etc/calamares/branding/debian/welcome.png
 /etc/calamares/modules/bootloader.conf
 /etc/calamares/modules/displaymanager.conf
 /etc/calamares/modules/finished.conf
