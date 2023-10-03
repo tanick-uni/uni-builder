@@ -1,4 +1,19 @@
 #!/bin/bash
+
 sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="uni-os 1.0 (NP)"/' /etc/os-release
 sed -i 's/^PRETTY_NAME=.*/PRETTY_NAME="uni-os 1.0 (NP)"/' /usr/lib/os-release
-#update-grub
+
+grub_conf=$(cat /etc/uni-os-release/uni-os-release.conf | grep "grub_configuration" | cut -d = -f 2)
+grub_conf=$(cat /etc/uni-os-release/uni-os-release.conf | grep "grub_update=yes" | cut -d = -f 2)
+
+if [ -e /etc/default/grub -a ${grub_conf} = "yes" ]; then
+    sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=3/' /etc/default/grub
+    sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR=`cat \/etc\/os-release | grep PRETTY_NAME= | cut -d \\" -f 2`/' /etc/default/grub
+    sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/' /etc/default/grub
+    echo 'GRUB_THEME="/usr/share/grub/themes/zorin/theme.txt"' >> /etc/default/grub
+    sed -i 's/grub_configuration=yes/grub_configuration=no/' /etc/uni-os-release/uni-os-release.conf
+fi
+
+if [ ${grub_update} = yes ]; then
+    update-grub
+fi
