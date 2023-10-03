@@ -17,7 +17,7 @@
 
 INPUT_ISO="debian-live-11.7.0-amd64-standard+nonfree.iso"
 OUTPUT_ISO="uni-os_lite_ja_1.0_amd64.iso"
-VOLUME_ID="uni-os lite ja 1.0 amd64"
+VOLUME_ID="uni-os_lite_ja_1.0_amd64"
 NAMESERVER="1.1.1.1"
 TIMEZONE="Asia/Tokyo"
 ZONEINFO_FILE="/usr/share/zoneinfo/Asia/Tokyo"
@@ -99,7 +99,7 @@ echo "$TIMEZONE" > /etc/timezone
 
 cp /root/build-config/apt/trusted.gpg.d/* /etc/apt/trusted.gpg.d/
 cp /root/build-config/apt/sources.list.d/* /etc/apt/sources.list.d/
-cp /root/build-config/apt/sources.list /etc/apt/sources.list
+cp /root/build-config/apt/sources.list /etc/apt/
 
 apt-get update
 apt-get install -y uni-desktop uni-desktop-l10n-ja /root/build-config/packages/*.deb
@@ -109,11 +109,6 @@ apt-get purge -y uni-os-build-conflicts
 cp /root/build-config/lightdm/slick-greeter.conf /etc/lightdm/
 
 plymouth-set-default-theme -R link
-
-sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=3/' /etc/default/grub
-sed -i 's/^GRUB_DISTRIBUTOR=.*/GRUB_DISTRIBUTOR=`cat \/etc\/os-release | grep PRETTY_NAME= | cut -d \\" -f 2`/' /etc/default/grub
-sed -i 's/^GRUB_CMDLINE_LINUX_DEFAULT=.*/GRUB_CMDLINE_LINUX_DEFAULT="quiet splash"/' /etc/default/grub
-echo 'GRUB_THEME="/usr/share/grub/themes/zorin/theme.txt"' >> /etc/default/grub
 
 update-locale LANG=ja_JP.UTF-8
 sed -i 's/# ja_JP.UTF-8 UTF-8/ja_JP.UTF-8 UTF-8/' /etc/locale.gen
@@ -139,31 +134,29 @@ umount edit/dev/
 
 # make squashfs
 log "Making filesystem.squashfs ..."
-mksquashfs edit/ extract-cd/live/filesystem.squashfs -xattrs -comp xz
+mksquashfs edit/ extract-cd/live/filesystem.squashfs -comp xz
 log "Done."
 
 # make iso
 log "Making $OUTPUT_ISO ..." 
 xorriso \
-  -as mkisofs  \
-  -volid "$VOLUME_ID" \
+  -as mkisofs \
+  -V "$OUTPUT_ISO" \
   -o "$OUTPUT_ISO" \
-  -J -joliet-long -l  \
-  -b isolinux/isolinux.bin  \
-  -no-emul-boot  \
-  -boot-load-size 4  \
-  -boot-info-table  \
-  --grub2-boot-info  \
-  -append_partition 2 0xef boot/grub/efi.img  \
-  -appended_part_as_gpt  \
-  --mbr-force-bootable  \
-  -eltorito-alt-boot  \
-  -e --interval:appended_partition_2:all::  \
+  -b isolinux/isolinux.bin \
+  -b boot/grub/efi.img \
+  -c isolinux/boot.cat \
+  -eltorito-alt-boot \
+  -boot-load-size 4 \
+  -boot-info-table \
   -no-emul-boot \
-  -partition_offset 16 \
-  -r \
+  -cache-inodes \
+  -J -l -r \
   extract-cd/
 log "Done."
+
+# calculate md5sum
+md5sum $OUTPUT_ISO > $OUTPUT_ISO.md5
 
 # umount
 umount squashfs/
