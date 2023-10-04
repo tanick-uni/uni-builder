@@ -9,6 +9,7 @@
 #   - https://github.com/estobuntu/ubuntu-estonian-remix 
 #   - https://code.launchpad.net/~ubuntu-cdimage/debian-cd/ubuntu
 #   - https://github.com/jkbys/ubuntu-ja-remix
+#   - https://wiki.debian.org/RepackBootableISO
 #
 # Author: Yamato Tanikawa <tanick_developer@outlook.jp>
 #
@@ -137,22 +138,29 @@ log "Making filesystem.squashfs ..."
 mksquashfs edit/ extract-cd/live/filesystem.squashfs -comp xz
 log "Done."
 
+# extract mbr template
+dd if="$INPUT_ISO" bs=1 count=432 of=isohdpfx.bin
+
 # make iso
-log "Making $OUTPUT_ISO ..." 
+log "Making $OUTPUT_ISO ..."
 xorriso \
   -as mkisofs \
-  -V "$OUTPUT_ISO" \
+  -r -J --joliet-long \
+  -V "$VOLUME_ID" \
   -o "$OUTPUT_ISO" \
-  -b isolinux/isolinux.bin \
-  -b boot/grub/efi.img \
+  -isohybrid-mbr isohdpfx.bin \
+  --mbr-force-bootable \
   -c isolinux/boot.cat \
-  -eltorito-alt-boot \
+  -b isolinux/isolinux.bin \
+  -no-emul-boot \
   -boot-load-size 4 \
   -boot-info-table \
+  -eltorito-alt-boot \
+  -e boot/grub/efi.img \
   -no-emul-boot \
-  -cache-inodes \
-  -J -l -r \
+  -isohybrid-gpt-basdat \
   extract-cd/
+rm isohdpfx.bin
 log "Done."
 
 # calculate md5sum
